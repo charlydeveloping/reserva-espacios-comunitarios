@@ -35,15 +35,12 @@ export const useNotificationStore = defineStore('notification', () => {
     error.value = null
 
     try {
-      const { data } = userId 
+      const notificationsData = userId 
         ? await apiFetchUserNotifications(userId)
         : await apiFetchNotifications()
       
-      if (data.value) {
-        notifications.value = data.value
-        return data.value
-      }
-      return []
+      notifications.value = notificationsData || []
+      return notificationsData || []
     } catch (err: any) {
       error.value = err.message || 'Error al cargar notificaciones'
       throw err

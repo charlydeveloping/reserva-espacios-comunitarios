@@ -13,6 +13,14 @@ export default defineNuxtConfig({
     '@vueuse/nuxt'
   ],
   
+  // Auto-imports configuration
+  imports: {
+    dirs: [
+      'composables/**',
+      'stores/**'
+    ]
+  },
+  
   // TypeScript configuration
   typescript: {
     strict: true,
@@ -22,7 +30,7 @@ export default defineNuxtConfig({
   // Runtime config for environment variables
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000/api'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3002/api'
     }
   },
   

@@ -27,9 +27,9 @@ export interface UpdateUserDto {
 // Space types
 export interface Space {
   id: string
-  name: string
-  type: SpaceType
-  capacity: number
+  nombre: string
+  tipo: SpaceType
+  capacidad: number
   description?: string
   location?: string
   amenities?: string[]
@@ -39,9 +39,9 @@ export interface Space {
 }
 
 export interface CreateSpaceDto {
-  name: string
-  type: SpaceType
-  capacity: number
+  nombre: string
+  tipo: SpaceType
+  capacidad: number
   description?: string
   location?: string
   amenities?: string[]
@@ -75,15 +75,11 @@ export interface Reservation {
 }
 
 export interface CreateReservationDto {
-  userId: string
-  spaceId: string
-  date: string
-  startTime: string
-  endTime: string
-  purpose?: string
-  attendees?: number
-  specialRequirements?: string
-  contactPhone?: string
+  usuarioId: string
+  espacioId: string
+  fecha: string
+  horaInicio: string
+  horaFin: string
 }
 
 export type ReservationStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED'

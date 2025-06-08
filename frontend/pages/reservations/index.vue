@@ -125,7 +125,7 @@
           <div class="flex-1">
             <div class="flex items-center mb-2">
               <h3 class="text-lg font-semibold text-gray-900 mr-3">
-                {{ reservation.space?.name || 'Espacio no encontrado' }}
+                {{ reservation.space?.nombre || 'Espacio no encontrado' }}
               </h3>
               <span
                 :class="getStatusBadgeClass(reservation.status)"
@@ -189,6 +189,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import { useReservationStore } from '~/stores/reservation'
 import { useUserStore } from '~/stores/user'
 import type { ReservationStatus } from '~/types'

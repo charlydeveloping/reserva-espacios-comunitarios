@@ -24,13 +24,13 @@ export const useSpaceStore = defineStore('space', {
     },
     
     getSpacesByType: (state) => (type: SpaceType) => {
-      return state.spaces.filter(space => space.type === type)
+      return state.spaces.filter(space => space.tipo === type)
     },
     
     totalSpaces: (state) => state.spaces.length,
     
     spaceTypes: (state) => {
-      const types = new Set(state.spaces.map(space => space.type))
+      const types = new Set(state.spaces.map(space => space.tipo))
       return Array.from(types)
     },
   },
@@ -58,11 +58,9 @@ export const useSpaceStore = defineStore('space', {
         this.setError(null)
         
         const { getSpaces } = useSpaces()
-        const { data } = await getSpaces()
+        const spaces = await getSpaces()
         
-        if (data.value) {
-          this.spaces = data.value
-        }
+        this.spaces = spaces
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar espacios')
       } finally {
@@ -77,11 +75,9 @@ export const useSpaceStore = defineStore('space', {
         this.setError(null)
         
         const { getAvailableSpaces } = useSpaces()
-        const { data } = await getAvailableSpaces(date, startTime, endTime)
+        const availableSpaces = await getAvailableSpaces(date, startTime, endTime)
         
-        if (data.value) {
-          this.availableSpaces = data.value
-        }
+        this.availableSpaces = availableSpaces
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar espacios disponibles')
       } finally {
@@ -115,19 +111,17 @@ export const useSpaceStore = defineStore('space', {
         this.setError(null)
         
         const { getSpaceById } = useSpaces()
-        const { data } = await getSpaceById(id)
+        const space = await getSpaceById(id)
         
-        if (data.value) {
-          this.setSelectedSpace(data.value)
-          
-          // Update in spaces list if exists
-          const index = this.spaces.findIndex(space => space.id === id)
-          if (index !== -1) {
-            this.spaces[index] = data.value
-          }
-          
-          return data.value
+        this.setSelectedSpace(space)
+        
+        // Update in spaces list if exists
+        const index = this.spaces.findIndex(space => space.id === id)
+        if (index !== -1) {
+          this.spaces[index] = space
         }
+        
+        return space
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar espacio')
         throw error
@@ -138,14 +132,14 @@ export const useSpaceStore = defineStore('space', {
 
     // Filter spaces by capacity
     filterByCapacity(minCapacity: number) {
-      return this.spaces.filter(space => space.capacity >= minCapacity)
+      return this.spaces.filter(space => space.capacidad >= minCapacity)
     },
 
     // Search spaces by name
     searchSpaces(query: string) {
       const lowercaseQuery = query.toLowerCase()
       return this.spaces.filter(space => 
-        space.name.toLowerCase().includes(lowercaseQuery)
+        space.nombre.toLowerCase().includes(lowercaseQuery)
       )
     },
 

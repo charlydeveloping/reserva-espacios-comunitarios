@@ -154,6 +154,10 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '~/stores/user'
+
 const userStore = useUserStore()
 const router = useRouter()
 
@@ -162,6 +166,14 @@ const showMobileMenu = ref(false)
 
 // Mock unread notifications count (replace with real data)
 const unreadCount = ref(3)
+
+// Initialize demo user on app load
+onMounted(() => {
+  // Initialize demo user if no current user is set
+  if (!userStore.currentUser) {
+    userStore.initializeDemoUser()
+  }
+})
 
 // Toggle mobile menu
 const toggleMobileMenu = () => {

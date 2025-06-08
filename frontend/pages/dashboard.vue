@@ -188,7 +188,7 @@
           >
             <div class="flex justify-between items-start mb-2">
               <h3 class="font-medium text-gray-900">
-                {{ reservation.space?.name || 'Espacio no encontrado' }}
+                {{ reservation.space?.nombre || 'Espacio no encontrado' }}
               </h3>
               <span
                 :class="getStatusBadgeClass(reservation.status)"
@@ -226,7 +226,7 @@
             class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
           >
             <div class="flex justify-between items-start mb-2">
-              <h3 class="font-medium text-gray-900">{{ space.name }}</h3>
+              <h3 class="font-medium text-gray-900">{{ space.nombre }}</h3>
               <span
                 :class="[
                   'badge',
@@ -240,7 +240,7 @@
             <p class="text-sm text-gray-600 mb-2">{{ space.description }}</p>
             
             <div class="flex items-center justify-between text-sm text-gray-500">
-              <span>Capacidad: {{ space.capacity }} personas</span>
+              <span>Capacidad: {{ space.capacidad }} personas</span>
               <NuxtLink
                 :to="`/spaces/${space.id}`"
                 class="text-blue-600 hover:text-blue-800"
@@ -256,6 +256,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '~/stores/user'
 import { useReservationStore } from '~/stores/reservation'
 import { useSpaceStore } from '~/stores/space'
@@ -301,7 +302,7 @@ const upcomingReservations = computed(() => {
 const popularSpaces = computed(() => {
   return spaceStore.spaces
     .filter(s => s.available)
-    .sort((a, b) => (b.capacity || 0) - (a.capacity || 0))
+    .sort((a, b) => (b.capacidad || 0) - (a.capacidad || 0))
 })
 
 const recentActivity = computed(() => {
@@ -312,7 +313,7 @@ const recentActivity = computed(() => {
     activities.push({
       id: `reservation-${reservation.id}`,
       type: 'reservation',
-      title: `Reserva creada: ${reservation.space?.name}`,
+      title: `Reserva creada: ${reservation.space?.nombre}`,
       createdAt: reservation.createdAt
     })
   })

@@ -47,11 +47,9 @@ export const useUserStore = defineStore('user', {
         this.setError(null)
         
         const { getUsers } = useUsers()
-        const { data } = await getUsers()
+        const users = await getUsers()
         
-        if (data.value) {
-          this.users = data.value
-        }
+        this.users = users
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar usuarios')
       } finally {
@@ -66,18 +64,16 @@ export const useUserStore = defineStore('user', {
         this.setError(null)
         
         const { getUserById } = useUsers()
-        const { data } = await getUserById(id)
+        const user = await getUserById(id)
         
-        if (data.value) {
-          // Update user in the list or add if not exists
-          const index = this.users.findIndex(user => user.id === id)
-          if (index !== -1) {
-            this.users[index] = data.value
-          } else {
-            this.users.push(data.value)
-          }
-          return data.value
+        // Update user in the list or add if not exists
+        const index = this.users.findIndex(u => u.id === id)
+        if (index !== -1) {
+          this.users[index] = user
+        } else {
+          this.users.push(user)
         }
+        return user
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar usuario')
         throw error
@@ -141,9 +137,9 @@ export const useUserStore = defineStore('user', {
         this.setError(null)
         
         const { searchUsersByName } = useUsers()
-        const { data } = await searchUsersByName(name)
+        const users = await searchUsersByName(name)
         
-        return data.value || []
+        return users
       } catch (error: any) {
         this.setError(error.message || 'Error al buscar usuarios')
         return []
@@ -209,6 +205,33 @@ export const useUserStore = defineStore('user', {
     // Clear error
     clearError() {
       this.setError(null)
+    },
+
+    // Initialize demo user for demo purposes
+    async initializeDemoUser() {
+      try {
+        // Use the first demo user from seed data (mapped to frontend types)
+        const demoUser = {
+          id: '550e8400-e29b-41d4-a716-446655440001',
+          name: 'Carlos Ramirez',
+          email: 'carlos.ramirez.g@ucb.edu.bo',
+          role: 'user' as const,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        
+        this.setCurrentUser(demoUser)
+        
+        // Add to users list if not already there
+        const existingUser = this.users.find(u => u.id === demoUser.id)
+        if (!existingUser) {
+          this.users.push(demoUser)
+        }
+        
+        return demoUser
+      } catch (error: any) {
+        console.error('Error initializing demo user:', error)
+      }
     },
   },
 })

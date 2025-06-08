@@ -16,27 +16,34 @@ async function main() {
     prisma.user.create({
       data: {
         id: '550e8400-e29b-41d4-a716-446655440001',
+        nombre: 'Carlos Ramirez',
+        email: 'carlos.ramirez.g@ucb.edu.bo',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        id: '550e8400-e29b-41d4-a716-446655440002',
         nombre: 'Ana García',
         email: 'ana.garcia@email.com',
       },
     }),
     prisma.user.create({
       data: {
-        id: '550e8400-e29b-41d4-a716-446655440002',
+        id: '550e8400-e29b-41d4-a716-446655440003',
         nombre: 'Carlos López',
         email: 'carlos.lopez@email.com',
       },
     }),
     prisma.user.create({
       data: {
-        id: '550e8400-e29b-41d4-a716-446655440003',
+        id: '550e8400-e29b-41d4-a716-446655440004',
         nombre: 'María Rodríguez',
         email: 'maria.rodriguez@email.com',
       },
     }),
     prisma.user.create({
       data: {
-        id: '550e8400-e29b-41d4-a716-446655440004',
+        id: '550e8400-e29b-41d4-a716-446655440005',
         nombre: 'Jorge Martín',
         email: 'jorge.martin@email.com',
       },

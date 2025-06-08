@@ -93,24 +93,24 @@
         <!-- Space Image Placeholder -->
         <div class="h-48 bg-gradient-to-br from-blue-400 to-blue-600 relative">
           <div class="absolute inset-0 flex items-center justify-center text-white text-4xl">
-            {{ getSpaceIcon(space.type) }}
+            {{ getSpaceIcon(space.tipo) }}
           </div>
           <div class="absolute top-4 right-4">
-            <span :class="getSpaceTypeBadgeClass(space.type)">
-              {{ getSpaceTypeLabel(space.type) }}
+            <span :class="getSpaceTypeBadgeClass(space.tipo)">
+              {{ getSpaceTypeLabel(space.tipo) }}
             </span>
           </div>
         </div>
 
         <!-- Space Info -->
         <div class="p-6">
-          <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ space.name }}</h3>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ space.nombre }}</h3>
           
           <div class="flex items-center text-gray-600 mb-4">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span>Capacidad: {{ space.capacity }} personas</span>
+            <span>Capacidad: {{ space.capacidad }} personas</span>
           </div>
 
           <div class="flex items-center justify-between">
@@ -214,18 +214,18 @@ const filteredSpaces = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(space => 
-      space.name.toLowerCase().includes(query)
+      space.nombre.toLowerCase().includes(query)
     )
   }
 
   // Filter by type
   if (selectedType.value) {
-    filtered = filtered.filter(space => space.type === selectedType.value)
+    filtered = filtered.filter(space => space.tipo === selectedType.value)
   }
 
   // Filter by capacity
   if (minCapacity.value) {
-    filtered = filtered.filter(space => space.capacity >= minCapacity.value!)
+    filtered = filtered.filter(space => space.capacidad >= minCapacity.value!)
   }
 
   return filtered
@@ -239,12 +239,12 @@ const availableSpacesCount = computed(() => {
 
 const averageCapacity = computed(() => {
   if (filteredSpaces.value.length === 0) return 0
-  const total = filteredSpaces.value.reduce((sum, space) => sum + space.capacity, 0)
+  const total = filteredSpaces.value.reduce((sum, space) => sum + space.capacidad, 0)
   return Math.round(total / filteredSpaces.value.length)
 })
 
 const spaceTypes = computed(() => {
-  const types = new Set(filteredSpaces.value.map(space => space.type))
+  const types = new Set(filteredSpaces.value.map(space => space.tipo))
   return Array.from(types)
 })
 

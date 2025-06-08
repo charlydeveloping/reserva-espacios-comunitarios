@@ -1,7 +1,33 @@
 import type { Notification, CreateNotificationDto, NotificationType, NotificationStatus } from '~/types'
 
+// Toast notification interface
+interface ToastNotification {
+  type: 'success' | 'error' | 'warning' | 'info'
+  title: string
+  message: string
+  duration?: number
+}
+
 export const useNotifications = () => {
-  const { get, post } = useApi()
+  const { get, post, put } = useApi()
+
+  // Simple toast notification function
+  const addNotification = (notification: ToastNotification) => {
+    // For now, just console.log - in the future you could integrate with a toast library
+    const icon = notification.type === 'success' ? '✅' : 
+                notification.type === 'error' ? '❌' : 
+                notification.type === 'warning' ? '⚠️' : 'ℹ️'
+    
+    console.log(`${icon} ${notification.title}: ${notification.message}`)
+    
+    // You could integrate with libraries like vue-toastification here
+    // For now, we'll use a simple alert for visibility
+    if (notification.type === 'error') {
+      alert(`Error: ${notification.message}`)
+    } else if (notification.type === 'success') {
+      alert(`Éxito: ${notification.message}`)
+    }
+  }
 
   // Get all notifications
   const getNotifications = () => {
@@ -25,13 +51,11 @@ export const useNotifications = () => {
 
   // Mark notification as read
   const markAsRead = async (notificationId: string): Promise<Notification> => {
-    const { put } = useApi()
     return put<Notification>(`/notifications/${notificationId}/read`, {})
   }
 
   // Mark all notifications as read
   const markAllAsRead = async (): Promise<void> => {
-    const { put } = useApi()
     return put<void>('/notifications/mark-all-read', {})
   }
 
@@ -117,6 +141,7 @@ export const useNotifications = () => {
   }
 
   return {
+    addNotification, // Add this new function
     getNotifications,
     getUserNotifications,
     createNotification,

@@ -13,8 +13,10 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/
 import { CreateReservationUseCase } from '../../application/use-cases/create-reservation.use-case';
 import { CancelReservationUseCase } from '../../application/use-cases/cancel-reservation.use-case';
 import { GetAllReservationsUseCase } from '../../application/use-cases/get-all-reservations.use-case';
+import { GetReservationByIdUseCase } from '../../application/use-cases/get-reservation-by-id.use-case';
 import { CreateReservationDto } from '../../application/dtos/create-reservation.dto';
 import { ReservationResponseDto } from '../../application/dtos/reservation-response.dto';
+import { ReservationFullResponseDto } from '../../application/dtos/reservation-full-response.dto';
 
 /**
  * Controlador REST para reservas
@@ -27,6 +29,7 @@ export class ReservationsController {
     private readonly createReservationUseCase: CreateReservationUseCase,
     private readonly cancelReservationUseCase: CancelReservationUseCase,
     private readonly getAllReservationsUseCase: GetAllReservationsUseCase,
+    private readonly getReservationByIdUseCase: GetReservationByIdUseCase,
   ) {}
 
   @Post()
@@ -58,10 +61,30 @@ export class ReservationsController {
   @ApiResponse({
     status: 200,
     description: 'Lista de reservas obtenida exitosamente',
-    type: [ReservationResponseDto],
+    type: [ReservationFullResponseDto],
   })
-  async getAllReservations(): Promise<ReservationResponseDto[]> {
+  async getAllReservations(): Promise<ReservationFullResponseDto[]> {
     return this.getAllReservationsUseCase.execute();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener una reserva por ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID de la reserva',
+    example: '123e4567-e89b-12d3-a456-426614174000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva obtenida exitosamente',
+    type: ReservationFullResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Reserva no encontrada',
+  })
+  async getReservationById(@Param('id') id: string): Promise<ReservationFullResponseDto> {
+    return this.getReservationByIdUseCase.execute(id);
   }
 
   @Put(':id/cancel')

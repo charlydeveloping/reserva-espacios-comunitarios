@@ -4,12 +4,12 @@ export const useSpaces = () => {
   const { get, post } = useApi()
 
   // Get all spaces
-  const getSpaces = () => {
-    return get<Space[]>('/spaces')
+  const getSpaces = async (): Promise<Space[]> => {
+    return await get<Space[]>('/spaces')
   }
 
   // Get available spaces
-  const getAvailableSpaces = (date?: string, startTime?: string, endTime?: string) => {
+  const getAvailableSpaces = async (date?: string, startTime?: string, endTime?: string): Promise<Space[]> => {
     let endpoint = '/spaces/available'
     const params = new URLSearchParams()
     
@@ -21,7 +21,7 @@ export const useSpaces = () => {
       endpoint += `?${params.toString()}`
     }
     
-    return get<Space[]>(endpoint)
+    return await get<Space[]>(endpoint)
   }
 
   // Create space
@@ -48,8 +48,8 @@ export const useSpaces = () => {
   }
 
   // Get space by ID
-  const getSpaceById = (id: string) => {
-    return get<Space>(`/spaces/${id}`)
+  const getSpaceById = async (id: string): Promise<Space> => {
+    return await get<Space>(`/spaces/${id}`)
   }
 
   return {

@@ -4,6 +4,7 @@ import { PrismaSpaceRepository } from './infrastructure/repositories/prisma-spac
 import { CreateSpaceUseCase } from './application/use-cases/create-space.use-case';
 import { GetAllSpacesUseCase } from './application/use-cases/get-all-spaces.use-case';
 import { GetAvailableSpacesUseCase } from './application/use-cases/get-available-spaces.use-case';
+import { GetSpaceByIdUseCase } from './application/use-cases/get-space-by-id.use-case';
 
 @Module({
   controllers: [SpacesController],
@@ -18,12 +19,14 @@ import { GetAvailableSpacesUseCase } from './application/use-cases/get-available
     CreateSpaceUseCase,
     GetAllSpacesUseCase,
     GetAvailableSpacesUseCase,
+    GetSpaceByIdUseCase,
   ],
   exports: [
     'SpaceRepository',
     CreateSpaceUseCase,
     GetAllSpacesUseCase,
     GetAvailableSpacesUseCase,
+    GetSpaceByIdUseCase,
   ],
 })
 export class SpacesModule {}

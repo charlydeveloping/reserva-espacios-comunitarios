@@ -32,15 +32,10 @@ export const useApi = () => {
     }
   }
 
-  const get = <T>(endpoint: string, options?: UseApiOptions) => {
-    return useLazyAsyncData<T>(
-      endpoint,
-      () => request<T>(endpoint),
-      {
-        immediate: options?.immediate ?? true,
-        server: options?.server ?? true,
-      }
-    )
+  const get = async <T>(endpoint: string): Promise<T> => {
+    return request<T>(endpoint, {
+      method: 'GET',
+    })
   }
 
   const post = async <T>(endpoint: string, body: any): Promise<T> => {

@@ -79,11 +79,9 @@ export const useReservationStore = defineStore('reservation', {
         this.setError(null)
         
         const { getReservations } = useReservations()
-        const { data } = await getReservations(filters)
+        const reservations = await getReservations(filters)
         
-        if (data.value) {
-          this.reservations = data.value
-        }
+        this.reservations = reservations
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar reservas')
       } finally {
@@ -98,11 +96,9 @@ export const useReservationStore = defineStore('reservation', {
         this.setError(null)
         
         const { getUserReservations } = useReservations()
-        const { data } = await getUserReservations(userId)
+        const userReservations = await getUserReservations(userId)
         
-        if (data.value) {
-          this.userReservations = data.value
-        }
+        this.userReservations = userReservations
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar reservas del usuario')
       } finally {
@@ -117,18 +113,16 @@ export const useReservationStore = defineStore('reservation', {
         this.setError(null)
         
         const { getReservationById } = useReservations()
-        const { data } = await getReservationById(id)
+        const reservation = await getReservationById(id)
         
-        if (data.value) {
-          // Update reservation in the list or add if not exists
-          const index = this.reservations.findIndex(reservation => reservation.id === id)
-          if (index !== -1) {
-            this.reservations[index] = data.value
-          } else {
-            this.reservations.push(data.value)
-          }
-          return data.value
+        // Update reservation in the list or add if not exists
+        const index = this.reservations.findIndex(res => res.id === id)
+        if (index !== -1) {
+          this.reservations[index] = reservation
+        } else {
+          this.reservations.push(reservation)
         }
+        return reservation
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar reserva')
         throw error
@@ -150,7 +144,7 @@ export const useReservationStore = defineStore('reservation', {
         
         // Add to user reservations if it's for the current user
         const userStore = useUserStore()
-        if (userStore.currentUser?.id === reservationData.userId) {
+        if (userStore.currentUser?.id === reservationData.usuarioId) {
           this.userReservations.push(newReservation)
         }
         
@@ -239,19 +233,17 @@ export const useReservationStore = defineStore('reservation', {
         this.setError(null)
         
         const { getReservationById } = useReservations()
-        const { data } = await getReservationById(id)
+        const reservation = await getReservationById(id)
         
-        if (data.value) {
-          this.setSelectedReservation(data.value)
-          
-          // Update in reservations list if exists
-          const index = this.reservations.findIndex(reservation => reservation.id === id)
-          if (index !== -1) {
-            this.reservations[index] = data.value
-          }
-          
-          return data.value
+        this.setSelectedReservation(reservation)
+        
+        // Update in reservations list if exists
+        const index = this.reservations.findIndex(res => res.id === id)
+        if (index !== -1) {
+          this.reservations[index] = reservation
         }
+        
+        return reservation
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar reserva')
         throw error
@@ -297,9 +289,9 @@ export const useReservationStore = defineStore('reservation', {
         this.setError(null)
         
         const { getReservations } = useReservations()
-        const { data } = await getReservations({ spaceId })
+        const spaceReservations = await getReservations({ spaceId })
         
-        return data.value || []
+        return spaceReservations
       } catch (error: any) {
         this.setError(error.message || 'Error al cargar reservas del espacio')
         return []

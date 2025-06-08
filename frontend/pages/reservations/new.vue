@@ -25,14 +25,14 @@
                 :key="space.id"
                 :value="space.id"
               >
-                {{ space.name }} - Capacidad: {{ space.capacity }} personas
+                {{ space.nombre }} - Capacidad: {{ space.capacidad }} personas
               </option>
             </select>
           </div>
 
           <!-- Selected Space Info -->
           <div v-if="selectedSpace" class="mb-6 p-4 bg-blue-50 rounded-lg">
-            <h3 class="font-medium text-blue-900 mb-2">{{ selectedSpace.name }}</h3>
+            <h3 class="font-medium text-blue-900 mb-2">{{ selectedSpace.nombre }}</h3>
             <p class="text-sm text-blue-700 mb-2">{{ selectedSpace.description }}</p>
             <div class="flex flex-wrap gap-2">
               <span
@@ -126,63 +126,7 @@
             </div>
           </div>
 
-          <!-- Attendees -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Número de asistentes *
-            </label>
-            <input
-              v-model.number="form.attendees"
-              type="number"
-              min="1"
-              :max="selectedSpace?.capacity || 999"
-              required
-              class="form-input"
-            />
-            <p v-if="selectedSpace" class="text-sm text-gray-500 mt-1">
-              Capacidad máxima: {{ selectedSpace.capacity }} personas
-            </p>
-          </div>
 
-          <!-- Purpose -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Propósito del evento *
-            </label>
-            <textarea
-              v-model="form.purpose"
-              required
-              rows="3"
-              placeholder="Describe brevemente el propósito de tu reserva..."
-              class="form-input"
-            ></textarea>
-          </div>
-
-          <!-- Special Requirements -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Requerimientos especiales
-            </label>
-            <textarea
-              v-model="form.specialRequirements"
-              rows="2"
-              placeholder="Menciona cualquier requerimiento especial para tu evento..."
-              class="form-input"
-            ></textarea>
-          </div>
-
-          <!-- Contact Info -->
-          <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Teléfono de contacto
-            </label>
-            <input
-              v-model="form.contactPhone"
-              type="tel"
-              placeholder="+52 999 123 4567"
-              class="form-input"
-            />
-          </div>
 
           <!-- Error Message -->
           <div v-if="error" class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -214,6 +158,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useSpaceStore } from '~/stores/space'
 import { useReservationStore } from '~/stores/reservation'
 import { useUserStore } from '~/stores/user'
@@ -242,11 +188,7 @@ const form = reactive({
   spaceId: '',
   date: '',
   startTime: '',
-  endTime: '',
-  attendees: 1,
-  purpose: '',
-  specialRequirements: '',
-  contactPhone: ''
+  endTime: ''
 })
 
 // Computed
@@ -265,11 +207,6 @@ function onSpaceChange() {
   // Reset availability check when space changes
   availabilityMessage.value = ''
   isAvailable.value = false
-  
-  // Reset attendees if exceeds new space capacity
-  if (selectedSpace.value && form.attendees > selectedSpace.value.capacity) {
-    form.attendees = selectedSpace.value.capacity
-  }
 }
 
 async function checkAvailability() {
@@ -319,19 +256,12 @@ async function submitReservation() {
   loading.value = true
 
   try {
-    const startDateTime = new Date(`${form.date}T${form.startTime}`)
-    const endDateTime = new Date(`${form.date}T${form.endTime}`)
-
     const reservationData: CreateReservationDto = {
-      spaceId: form.spaceId,
-      userId: userStore.currentUser.id,
-      date: form.date,
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
-      attendees: form.attendees,
-      purpose: form.purpose,
-      specialRequirements: form.specialRequirements || undefined,
-      contactPhone: form.contactPhone || undefined
+      espacioId: form.spaceId,
+      usuarioId: userStore.currentUser.id,
+      fecha: form.date,
+      horaInicio: form.startTime,
+      horaFin: form.endTime
     }
 
     const reservation = await reservationStore.createReservation(reservationData)

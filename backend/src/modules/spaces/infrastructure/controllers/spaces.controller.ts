@@ -12,6 +12,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/
 import { CreateSpaceUseCase } from '../../application/use-cases/create-space.use-case';
 import { GetAllSpacesUseCase } from '../../application/use-cases/get-all-spaces.use-case';
 import { GetAvailableSpacesUseCase } from '../../application/use-cases/get-available-spaces.use-case';
+import { GetSpaceByIdUseCase } from '../../application/use-cases/get-space-by-id.use-case';
 import { CreateSpaceDto } from '../../application/dtos/create-space.dto';
 import { SpaceResponseDto } from '../../application/dtos/space-response.dto';
 
@@ -25,6 +26,7 @@ export class SpacesController {
     private readonly createSpaceUseCase: CreateSpaceUseCase,
     private readonly getAllSpacesUseCase: GetAllSpacesUseCase,
     private readonly getAvailableSpacesUseCase: GetAvailableSpacesUseCase,
+    private readonly getSpaceByIdUseCase: GetSpaceByIdUseCase,
   ) {}
 
   @Post()
@@ -52,6 +54,26 @@ export class SpacesController {
   })
   async getAllSpaces(): Promise<SpaceResponseDto[]> {
     return this.getAllSpacesUseCase.execute();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener un espacio por ID' })
+  @ApiParam({
+    name: 'id',
+    description: 'ID único del espacio',
+    example: '660e8400-e29b-41d4-a716-446655440002',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Espacio obtenido exitosamente',
+    type: SpaceResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Espacio no encontrado',
+  })
+  async getSpaceById(@Param('id') id: string): Promise<SpaceResponseDto> {
+    return this.getSpaceByIdUseCase.execute(id);
   }
 
   @Get('available')

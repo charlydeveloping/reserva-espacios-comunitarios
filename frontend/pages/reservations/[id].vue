@@ -25,7 +25,7 @@
             <span>/</span>
             <span class="text-gray-900">Reserva #{{ reservation.id.slice(-8).toUpperCase() }}</span>
           </nav>
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ reservation.space?.name }}</h1>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ reservation.space?.nombre }}</h1>
           <div class="flex items-center gap-3">
             <span
               :class="getStatusBadgeClass(reservation.status)"
@@ -153,7 +153,7 @@
             <div v-if="reservation.space" class="space-y-4">
               <div>
                 <h3 class="text-sm font-medium text-gray-700">Nombre</h3>
-                <p class="text-gray-900">{{ reservation.space.name }}</p>
+                <p class="text-gray-900">{{ reservation.space.nombre }}</p>
               </div>
               
               <div>
@@ -163,7 +163,7 @@
               
               <div>
                 <h3 class="text-sm font-medium text-gray-700">Capacidad</h3>
-                <p class="text-gray-900">{{ reservation.space.capacity }} personas</p>
+                <p class="text-gray-900">{{ reservation.space.capacidad }} personas</p>
               </div>
               
               <div>
@@ -211,6 +211,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useReservationStore } from '~/stores/reservation'
 import { useUserStore } from '~/stores/user'
 import type { Reservation, ReservationStatus } from '~/types'
@@ -313,7 +315,7 @@ onMounted(async () => {
       reservation.value = fetchedReservation
       
       // Check if user has permission to view this reservation
-      if (userStore.currentUser) {
+      if (userStore.currentUser && reservation.value) {
         const isOwner = reservation.value.userId === userStore.currentUser.id
         const isAdmin = userStore.currentUser.role === 'admin'
         
