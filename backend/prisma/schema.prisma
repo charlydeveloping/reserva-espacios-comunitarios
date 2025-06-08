@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  reservas      Reservation[]
+  notificaciones Notification[]
+
+  @@map("users")
+}
+
+model Space {
+  id         String   @id @default(uuid())
+  nombre     String
+  tipo       String   // ej: "sala_reunion", "cancha_deportiva", "auditorio"
+  capacidad  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relaciones
+  reservas   Reservation[]
+
+  @@map("spaces")
+}
+
+model Reservation {
+  id          String            @id @default(uuid())
+  usuarioId   String
+  espacioId   String
+  fecha       DateTime
+  horaInicio  DateTime
+  horaFin     DateTime
+  estado      ReservationStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relaciones
+  usuario     User              @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  espacio     Space             @relation(fields: [espacioId], references: [id], onDelete: Cascade)
+
+  @@map("reservations")
+  @@index([usuarioId])
+  @@index([espacioId])
+  @@index([fecha])
+}
+
+model Notification {
+  id        String            @id @default(uuid())
+  userId    String
+  type      NotificationType
+  subject   String
+  content   String
+  status    NotificationStatus @default(PENDING)
+  sentAt    DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  // Relaciones
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+}
+
+enum ReservationStatus {
+  PENDING     // Pendiente de confirmación
+  CONFIRMED   // Confirmada
+  CANCELLED   // Cancelada
+  COMPLETED   // Completada
+}
+
+enum NotificationType {
+  RESERVATION_CONFIRMATION
+  RESERVATION_CANCELLATION
+  RESERVATION_REMINDER
+  SYSTEM_ANNOUNCEMENT
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
