@@ -1,10 +1,26 @@
-# Nuxt Minimal Starter
+# Frontend - Sistema de Reserva de Espacios Comunitarios
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Aplicación frontend desarrollada con **Nuxt.js 3** + **Vue.js 3**, implementando una interfaz moderna y responsive para el sistema de gestión de reservas de espacios comunitarios.
 
-## Setup
+## 🚀 Tecnologías
 
-Make sure to install dependencies:
+- **Framework**: Nuxt.js 3 + Vue.js 3
+- **Styling**: Tailwind CSS
+- **State Management**: Pinia
+- **TypeScript**: Soporte completo
+- **HTTP Client**: Nuxt/HTTP para comunicación con API
+- **Validación**: VeeValidate + Yup
+- **Componentes UI**: Headless UI + Custom Components
+
+## 📋 Prerrequisitos
+
+- Node.js 18+
+- npm, pnpm, yarn o bun
+- Backend ejecutándose en `http://localhost:3000`
+
+## 🛠️ Instalación
+
+Instalar dependencias:
 
 ```bash
 # npm
@@ -20,9 +36,9 @@ yarn install
 bun install
 ```
 
-## Development Server
+## 🏃‍♂️ Servidor de Desarrollo
 
-Start the development server on `http://localhost:3000`:
+Iniciar el servidor de desarrollo en `http://localhost:3001`:
 
 ```bash
 # npm
@@ -38,9 +54,9 @@ yarn dev
 bun run dev
 ```
 
-## Production
+## 🏗️ Producción
 
-Build the application for production:
+Construir la aplicación para producción:
 
 ```bash
 # npm
